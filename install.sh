@@ -1,16 +1,21 @@
 
 encrypt_device(){
 echo "What password should we use to lock your system?"
-read -s $password
+read -s password
 
 echo "Can you confirm that password?"
-read -s $confirm_password
+read -s confirm_password
 
-if [ '$password' = '$confirm_password' ]; then
+if [[ "$password" == "$confirm_password" ]]; then
   echo "Password confirmed"
   echo "YES\n$password\n$password" | cryptsetup -v luksFormat $root_partition
-  cryptsetup open $root_partition cryptroot
+  echo "$password" | cryptsetup open $root_partition cryptroot
+
+else
+	echo "Passwords did not match"
+	exit
 fi
+
 }
 
 
@@ -18,12 +23,13 @@ fi
 lsblk
 echo "What disk should we install to?"
 read install_device
+install_device="/dev/"$install_device
 
 # Are we on a UEFI system?
-if [ -d '/usr/sys/firmware/efi' ]; then
+if [ -d '/sys/firmware/efi' ]; then
   cat uefi_fdisk.input | fdisk $install_device
-  $uefi_partition = "$install_device" "1"
-  $root_partition = "$install_device" "2"
+  uefi_partition="$install_device""1"
+  root_partition="$install_device""2"
   encrypt_device
   mkfs.vfat -F32 $uefi_partition
   mkfs.ext4 /dev/mapper/cryptroot
@@ -32,7 +38,7 @@ if [ -d '/usr/sys/firmware/efi' ]; then
   mount $uefi_partition /mnt/boot
 else
   cat bios_fdisk.input | fdisk $install_device
-  $root_partition = "$install_device" "1"
+  root_partition="$install_device" "1"
   encrypt_device
   mkfs.ext4 /dev/mapper/cryptroot
   mount /dev/mapper/cryptroot /mnt
@@ -64,7 +70,7 @@ echo "Copying config files over"
 cp mkinitcpio.conf /mnt/etc/mkinitcpio.conf
 cp locale-gen /mnt/locale-gen
 cp -r loader /mnt/boot
-echo "options		cryptdevice=$(blkid $root_partition | cut -d" " -f2 | sed "s/\"//g"):cryptroot root=/dev/mapper/cryptroot quiet loglevel=3 rd.udev.log-priority=3 splash rw"
+echo "options		cryptdevice=$(blkid $root_partition | cut -d" " -f2 | sed "s/\"//g"):cryptroot root=/dev/mapper/cryptroot quiet loglevel=3 rd.udev.log-priority=3 splash rw" >> /mnt/boot/loader/entries/arch.conf
 
 echo "Entering new system for configuration"
 cat system_config.sh | arch-chroot /mnt

@@ -1,12 +1,12 @@
 echo "What's your Region?"
-timedatectl list-timezones | cut -d"/" -f1 | sort | uniq
+ls /usr/share/zoneinfo
 read country
 
 echo "What's your City?"
-timedatectl list-timezones | grep '$country' | cut -d"/" -f2
+ls '/usr/share/zoneinfo/'$country
 read city
 
-ln -sf '/usr/share/zoneinfo/$country/$city' /etc/localtime
+ln -sf '/usr/share/zoneinfo/'$country'/'$city /etc/localtime
 hwclock --systohc
 
 echo "Ok, this needs some user help, I couldn't think up of a better way to do this (enter to continue)"
@@ -20,7 +20,7 @@ read
 echo "Are you ready? (enter to continue)"
 read
 
-nano /etc/locale.conf
+nano /etc/locale.gen
 
 echo "Ok, we're done with locale."
 echo "LANG=$(sudo bash locale-gen)" > /etc/locale.conf
@@ -37,4 +37,4 @@ echo "Enter your root password"
 passwd
 
 echo "Installing bootloader"
-bootctl --path=esp install
+bootctl --path=/boot install
