@@ -61,8 +61,8 @@
 URxvt*scrollBar: false
 
 ! Appearance
-URxvt.font: xft:Consolas:size=11, xft:Menlo for Powerline
-URxvt.letterSpace: -1
+URxvt.font: xft:Inconsolata for Powerline:size=13
+URxvt.letterSpace: 0
 
 
 URxvt*termName: xterm
