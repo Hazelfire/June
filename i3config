@@ -204,7 +204,6 @@ bindsym XF86MonBrightnessDown exec xbacklight -set $(python -c "print(((int($(xb
 new_window pixel 3
 hide_edge_borders both
 
-exec export PYTHONPATH="${PYTHONPATH}:/home/sam/.scripts/python"
 #exec python /usr/lib/python3.6/site-packages/powerline/bindings/lemonbar/powerline-lemonbar.py -i3 –height 16 - -f "DejaVu Sans Mono for Powerline-10" -B "$white_light" -F "$foreground"
 #exec ~/.i3/lemonbar.sh | lemonbar -p -f "Menlo for Powerline-9" -B "$background" -F "$foreground"
 bar {

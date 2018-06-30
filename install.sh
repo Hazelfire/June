@@ -73,6 +73,7 @@ cp -r loader /mnt/boot
 echo "options		cryptdevice=$(blkid $root_partition | cut -d" " -f2 | sed "s/\"//g"):cryptroot root=/dev/mapper/cryptroot quiet loglevel=3 rd.udev.log-priority=3 splash rw" >> /mnt/boot/loader/entries/arch.conf
 
 echo "Entering new system for configuration"
-cat system_config.sh | arch-chroot /mnt
+cp system_config.sh /mnt
+cat "bash system_config.sh" | arch-chroot /mnt
 
 echo "Done! poweroff and reboot the system without the usb"

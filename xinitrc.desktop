@@ -1,0 +1,6 @@
+[Desktop Entry]
+name=xinitrc
+Comment=Executes .xinitrc as a script
+Exec=xinitrchelper
+TryExec=xinitrchelper
+Type=Application
