@@ -1,5 +1,5 @@
-[[ -f ~/.Xresources ]] && xrdb -I$HOME ~/.Xresources.dark
-feh --randomize --bg-fill ~/Pictures/Wallpapers/stock-photo*989.jpg
+[[ -f ~/.Xresources ]] && xrdb -I$HOME ~/.Xresources
+feh --randomize --bg-fill ~/Pictures/wallpaper.jpg
 blueman-applet &
 nm-applet &
 exec i3 
