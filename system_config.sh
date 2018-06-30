@@ -33,8 +33,7 @@ echo "127.0.0.1 $hostname.localdomain $hostname" >> /etc/hosts
 echo "Building the boot image"
 mkinitcpio -p linux
 
-echo "Enter your root password"
-passwd
+echo "root:"$1 | chpasswd
 
 echo "Installing bootloader"
 bootctl --path=/boot install
@@ -45,7 +44,7 @@ if [ -z "$(lscpu | grep Intel)" ]; then
 	echo "initrd		/intel-ucode.img"
 fi
 
-packages=("i3" "zsh" "xorg-server" "lightdm" "mesa" "rxvt-unicode" "feh" "udisks2" "networkmanager" "blueman" "bluez" "bluez-utils")
+packages=("i3" "zsh" "xorg-server" "lightdm" "mesa" "rxvt-unicode" "feh" "udisks2" "networkmanager" "blueman" "bluez" "bluez-utils" "dmenu" "zsh")
 
 if lspci | grep VGA | grep Intel ; then
 	echo "Intel graphics detected"
@@ -72,7 +71,10 @@ systemctl enable bluetooth.service
 echo "What do you want your main user to be called?"
 read username
 
-useradd -m -G wheel,autologin $username
+echo $username":"$1
+
+groupadd autologin
+useradd -m -G wheel,autologin -s /usr/bin/zsh $username
 
 echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 
@@ -92,4 +94,6 @@ cp wallpaper.jpg '/home/'$username'/Pictures'
 mkdir -p '/home/'$username'/.local/share/fonts'
 cp fonts/* '/home/'$username'/.local/share/fonts'
 
+su sam -c "sh -c \"$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)\""
+cp .zshrc '/home/'$username
 

@@ -74,6 +74,6 @@ echo "options		cryptdevice=$(blkid $root_partition | cut -d" " -f2 | sed "s/\"//
 
 echo "Entering new system for configuration"
 cp system_config.sh /mnt
-cat "bash system_config.sh" | arch-chroot /mnt
+cat "bash system_config.sh "$password | arch-chroot /mnt
 
 echo "Done! poweroff and reboot the system without the usb"
